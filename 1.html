@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Музыкальный клуб</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="index.html"><img src="images/logo.jpg" alt="Логотип Музыкального клуба"></a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#">Главная</a></li>
+          <li><a href="#">О нас</a></li>
+          <li><a href="#">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="click-counter">
+      <p>Количество кликов: <span id="click-count">0</span></p>
+      <button id="click-button">Кликни меня!</button>
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <script>
+    let clickCount = 0;
+    const countDisplay = document.getElementById('click-count');
+    const clickButton = document.getElementById('click-button');
+    clickButton.addEventListener('click', () => countDisplay.textContent = ++clickCount);
+  </script>
+</body>
+</html>
