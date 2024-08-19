@@ -38,7 +38,6 @@
     const getAudioButton = document.getElementById('get-audio-button');
     const audioList = document.getElementById('audio-list');
     const audioPlayer = document.getElementById('audio-player');
-    
     getAudioButton.addEventListener('click', () => {
       // Request access token
       vkBridge.send('VKWebAppGetAuthToken', {
@@ -68,8 +67,8 @@
             const li = document.createElement('li');
             li.textContent = `${audio.artist} - ${audio.title}`;
             li.addEventListener('click', () => {
-              audioPlayer.src = audio.url; // Устанавливаем источник для аудиоплеера
-              audioPlayer.play(); // Воспроизводим аудиозапись
+              audioPlayer.src = audio.url;
+              audioPlayer.play();
             });
             audioList.appendChild(li);
           });
