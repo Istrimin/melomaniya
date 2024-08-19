@@ -10,16 +10,6 @@
 <body>
   <header>
     <div class="container">
-      <!-- <div class="logo">
-        <a href="index.html"><img src="images/logo.jpg" alt="Логотип Музыкального клуба"></a>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="#">Главная</a></li>
-          <li><a href="#">О нас</a></li>
-          <li><a href="#">Контакты</a></li>
-        </ul>
-      </nav> -->
     </div>
   </header>
   <main>
@@ -28,54 +18,62 @@
       <button id="click-button">Click Me!</button>
     </div>
     <div class="music-player">
-      <input type="text" id="vk-song-url" placeholder="Вставьте ссылку на песню VK">
-      <button id="play-button">Play</button>
-      <p id="song-title"></p>
+      <button id="get-audio-button">Получить список аудиозаписей</button>
+      <ul id="audio-list"></ul>
       <audio id="audio-player" controls></audio>
     </div>
   </main>
   <footer></footer>
   <script>
     // Инициализация VK Bridge
-    vkBridge.send('VKWebAppInit')
-      .then((data) => {
-        if (data.result) {
-          console.log("Приложение инициализировано");
-          // Здесь можно добавить код, который должен после успешной инициализации
-        } else {
-          console.log("Ошибка инициализации");
-        }
-      })
-      .catch((error) => {
-        console.log("Ошибка:", error);
-      });
+    vkBridge.send('VKWebAppInit');
 
     let clickCount = 0;
     const countDisplay = document.getElementById('click-count');
     const clickButton = document.getElementById('click-button');
     clickButton.addEventListener('click', () => countDisplay.textContent = ++clickCount);
 
-    const songUrlInput = document.getElementById('vk-song-url');
-    const playButton = document.getElementById('play-button');
-    const songTitle = document.getElementById('song-title');
+    const getAudioButton = document.getElementById('get-audio-button');
+    const audioList = document.getElementById('audio-list');
     const audioPlayer = document.getElementById('audio-player');
 
-    playButton.addEventListener('click', () => {
-      const songUrl = songUrlInput.value;
-      if (songUrl) {
-        // Extract the song title from the VK URL
-        const titleMatch = songUrl.match(/vk\.com\/(.*?)\/audio(.*?)\/(.*?)\/(.+)/);
-        if (titleMatch) {
-          songTitle.textContent = titleMatch[4];
-          // Set the audio source to the VK song URL
-          audioPlayer.src = songUrl;
-          audioPlayer.play();
+    getAudioButton.addEventListener('click', () => {
+      // Запрос токена доступа
+      vkBridge.send('VKWebAppGetAuthToken', {
+        app_id: 52166766,
+        scope: 'audio'
+      })
+      .then(data => {
+        if (data.access_token) {
+          //ка аудиозаписей
+          return vkBridge.send('VKWebAppCallAPIMethod', {
+            method: 'audio.get',
+            params: {
+              access_token: data.access_token,
+              v: '5.131'
+            }
+          });
         } else {
-          alert('Неверный формат ссылки VK');
+          throw new Error('Не удалось получить токен доступа');
         }
-      } else {
-        alert('Введите ссылку на песню');
-      }
+      })
+      .then(audioData => {
+        // Отображение списка аудиозаписей
+        audioList.innerHTML = '';
+        audioData.response.items.forEach(audio => {
+          const li = document.createElement('li');
+          li.textContent = `${audio.artist} - ${audio.title}`;
+          li.addEventListener('click', () => {
+            audioPlayer.src = audio.url;
+            audioPlayer.play();
+          });
+          audioList.appendChild(li);
+        });
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при получении аудиозаписей');
+      });
     });
   </script>
 </body>
