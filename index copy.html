@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Музыкальный club</title>
   <link rel="stylesheet" href="css/style.css">
-  <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 </head>
 <body>
   <header>
@@ -22,11 +21,13 @@
       </nav> -->
     </div>
   </header>
+
   <main>
     <div class="click-counter">
       <p>Количество кликов: <span id="click-count">0</span></p>
       <button id="click-button">Click Me!</button>
     </div>
+
     <div class="music-player">
       <input type="text" id="vk-song-url" placeholder="Вставьте ссылку на песню VK">
       <button id="play-button">Play</button>
@@ -34,22 +35,10 @@
       <audio id="audio-player" controls></audio>
     </div>
   </main>
-  <footer></footer>
-  <script>
-    // Инициализация VK Bridge
-    vkBridge.send('VKWebAppInit')
-      .then((data) => {
-        if (data.result) {
-          console.log("Приложение инициализировано");
-          // Здесь можно добавить код, который должен после успешной инициализации
-        } else {
-          console.log("Ошибка инициализации");
-        }
-      })
-      .catch((error) => {
-        console.log("Ошибка:", error);
-      });
 
+  <footer></footer>
+
+  <script>
     let clickCount = 0;
     const countDisplay = document.getElementById('click-count');
     const clickButton = document.getElementById('click-button');
