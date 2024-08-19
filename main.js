@@ -6,7 +6,10 @@ bridge.send('VKWebAppInit')
       // Ошибка
     }
   })
-  .catch((error) => {
-    // Ошибка
-    console.log(error);
+  .catch(error => {
+    console.error('Ошибка:', error);
+    console.error('Детали ошиб.stringify(error));
+    alert('Произошла ошибка при получении аудиозаписей: ' + error.message);
+  });
+
   });

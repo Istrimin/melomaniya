@@ -25,27 +25,29 @@
   </main>
   <footer></footer>
   <script>
-    // Инициализация VK Bridge
+    // Initialize VK Bridge
     vkBridge.send('VKWebAppInit');
 
+    // Click Counter
     let clickCount = 0;
     const countDisplay = document.getElementById('click-count');
     const clickButton = document.getElementById('click-button');
     clickButton.addEventListener('click', () => countDisplay.textContent = ++clickCount);
 
+    // Get Audio Button
     const getAudioButton = document.getElementById('get-audio-button');
     const audioList = document.getElementById('audio-list');
     const audioPlayer = document.getElementById('audio-player');
 
     getAudioButton.addEventListener('click', () => {
-      // Запрос токена доступа
+      // Request access token
       vkBridge.send('VKWebAppGetAuthToken', {
         app_id: 52166766,
-        scope: 'audio'
+        scope: 'audio,offline' // Add more permissions as needed
       })
       .then(data => {
         if (data.access_token) {
-          //ка аудиозаписей
+          // Get audio recordings
           return vkBridge.send('VKWebAppCallAPIMethod', {
             method: 'audio.get',
             params: {
@@ -54,11 +56,11 @@
             }
           });
         } else {
-          throw new Error('Не удалось получить токен доступа');
+          alert('Не удалось получить токен доступа. Пожалуйста, разрешите доступ к вашим аудиозаписям.');
         }
       })
       .then(audioData => {
-        // Отображение списка аудиозаписей
+        // Display the list of audio recordings
         audioList.innerHTML = '';
         audioData.response.items.forEach(audio => {
           const li = document.createElement('li');
@@ -72,7 +74,8 @@
       })
       .catch(error => {
         console.error('Ошибка:', error);
-        alert('Произошла ошибка при получении аудиозаписей');
+        console.error('Детали ошибки:', JSON.stringify(error)); // Log error details
+        alert('Произошла ошибка при получении аудиозаписей: ' + error.message); 
       });
     });
   </script>
