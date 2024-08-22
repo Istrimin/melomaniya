@@ -20,6 +20,10 @@ getAudioButton.addEventListener('click', () => {
   })
   .then(data => {
     if (data.access_token) {
+      // Вывод токена доступа на экран
+      const tokenDisplay = document.getElementById('token-display');
+      tokenDisplay.textContent = `Токен доступа: ${data.access_token}`;
+
       // Get audio recordings
       return vkBridge.send('VKWebAppCallAPIMethod', {
         method: 'audio.get',
