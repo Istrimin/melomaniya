@@ -28,6 +28,7 @@ getAudioButton.addEventListener('click', () => {
       return vkBridge.send('VKWebAppCallAPIMethod', {
         method: 'audio.get',
         params: {
+          owner_id: 0, // Указываем 0 для получения аудиозаписей текущего пользователя
           access_token: data.access_token,
           v: '5.131'
         }
